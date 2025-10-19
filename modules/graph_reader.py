@@ -1,26 +1,30 @@
-import os
-import sys
-
-# import gexf
+import xml.etree.ElementTree as ET
 
 from models.node import Node
 from models.edge import Edge
+from models.graph import Graph
 
-INPUT_FILE_NAME = 'LesMiserables.gexf'
+INPUT_FILE_NAME = 'data/LesMiserables.gexf'
 
 def read_and_format_data():
-    """ Método para leitura do grafo """
+    """ Método para leitura do grafo usando XML parser """
     nodes = []
     edges = []
-    graph = []
 
-    with open(INPUT_FILE_NAME) as graph_file:
-        graph = Gexf.importXML(graph_file)
+    tree = ET.parse(INPUT_FILE_NAME)
+    root = tree.getroot()
     
-    for node in graph.nodes.iteritems() : 
-        nodes.append(Node(node.id, node.label))
-        print(nodes)
-
-    for edge in graph.edges.iteritems() : 
-        edges.append(Edge(edge.id, edge.source, edge.target))
-        print(edges)
+    ns = {'gexf': 'http://www.gexf.net/1.1draft'}
+    
+    for node in root.findall('.//gexf:node', ns):
+        node_id = node.get('id')
+        label = node.get('label', node_id)
+        nodes.append(Node(node_id, label))
+    
+    for edge in root.findall('.//gexf:edge', ns):
+        edge_id = edge.get('id')
+        source = edge.get('source')
+        target = edge.get('target')
+        edges.append(Edge(edge_id, source, target))
+      
+    return Graph(nodes, edges)
