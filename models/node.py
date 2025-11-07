@@ -4,4 +4,3 @@ class Node:
         self.id = id
         self.label = label
         self.betweenness = None
-        self.distances = None

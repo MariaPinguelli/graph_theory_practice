@@ -6,7 +6,7 @@ def print_results(graph):
     print("\n" + "="*50)
     print("BETWEENNESS:")
     for node in graph.nodes:
-        print(f"{node.id} ({node.label}): {node.betweenness}")
+        print(f"{node.id} ({node.label}): {node.betweenness:.4f}")
     
     os.makedirs("output", exist_ok=True)
     
